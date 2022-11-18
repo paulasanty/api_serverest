@@ -1,0 +1,13 @@
+image:
+    name: postman/newman
+    entrypoint: [ "" ]
+
+pages:
+  script:
+    - npm install -g newman-reporter-html
+    - newman run teste_api_collection.json --folder "Usuarios" -e env_api.json -r cli,htmlextra --reporter-htmlextra-title "Teste API - Usuário" --reporter-html-export public/index.html
+
+  artifacts:
+    expire_in: 3 days
+    paths:
+      - public

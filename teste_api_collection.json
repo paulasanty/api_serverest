@@ -1,0 +1,1703 @@
+{
+	"info": {
+		"_postman_id": "dcffd904-651b-45a2-b308-327fdbf85ed1",
+		"name": "API - Serve Rest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5081715"
+	},
+	"item": [
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "CT001 - Cadastrar Usuario perfil básico",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('idUsuario', responseBody._id)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(201);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const obterCPF = {\r",
+									"  url: 'https://www.4devs.com.br/ferramentas_online.php',\r",
+									"  method: 'POST',\r",
+									"  header: 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',\r",
+									"  body: {\r",
+									"            mode: 'urlencoded',\r",
+									"            urlencoded: [\r",
+									"                    { key: 'acao', value: 'gerar_pessoa' },\r",
+									"                    { key: 'sexo', value: 'I' },\r",
+									"                    { key: 'txt_qtde', value: '1' },\r",
+									"            ]\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.sendRequest(obterCPF, function (err, res) {\r",
+									"    console.log(err ? err : res.json());\r",
+									"    if (err === null) {\r",
+									"        console.log('Saving the responseBody');\r",
+									"        //var responseJson = JSON.stringify( res.json()[0].nome)\r",
+									"        pm.environment.set('nome', res.json()[0].nome);\r",
+									"        pm.environment.set('email', res.json()[0].email);\r",
+									"\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"strictSSL": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nome}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"teste145\",\r\n  \"administrador\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT002 - Cadastrar Usuário perfil ADM",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const obterCPF = {\r",
+									"  url: 'https://www.4devs.com.br/ferramentas_online.php',\r",
+									"  method: 'POST',\r",
+									"  header: 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',\r",
+									"  body: {\r",
+									"            mode: 'urlencoded',\r",
+									"            urlencoded: [\r",
+									"                    { key: 'acao', value: 'gerar_pessoa' },\r",
+									"                    { key: 'sexo', value: 'I' },\r",
+									"                    { key: 'txt_qtde', value: '1' },\r",
+									"            ]\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.sendRequest(obterCPF, function (err, res) {\r",
+									"    console.log(err ? err : res.json());\r",
+									"    if (err === null) {\r",
+									"        console.log('Saving the responseBody');\r",
+									"        //var responseJson = JSON.stringify( res.json()[0].nome)\r",
+									"        pm.environment.set('nome_ADM', res.json()[0].nome);\r",
+									"        pm.environment.set('email_ADM', res.json()[0].email);\r",
+									"\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('idUsuarioADM', responseBody._id)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nome_ADM}}\",\r\n  \"email\": \"{{email_ADM}}\",\r\n  \"password\": \"teste145\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT003 - Consultar usuários",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar a quantidade de usuário cadastrado\", function () {\r",
+									"    pm.expect(responseBody.quantidade).to.be.not.null\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios?_id={{idUsuario}}&nome={{nome}}&email={{email}}&password={{password}}&administrador=false",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "{{idUsuario}}"
+								},
+								{
+									"key": "nome",
+									"value": "{{nome}}"
+								},
+								{
+									"key": "email",
+									"value": "{{email}}"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}"
+								},
+								{
+									"key": "administrador",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT004 - Consultar usuário perfil ADM",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar a quantidade de usuário cadastrado\", function () {\r",
+									"    pm.expect(responseBody.quantidade).to.not.null\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios?_id={{idUsuario}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "{{idUsuario}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT005 - Alterar Usuario",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve a mensagem que oregistro foi alterado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eql(\"Registro alterado com sucesso\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"strictSSL": false
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nome}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"teste145\",\r\n  \"administrador\": \"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios/{{idUsuario}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios",
+								"{{idUsuario}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT006 - Consultar usuários - Dados alterados",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('password', responseBody.usuarios[0].password)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar a quantidade de usuário cadastrado\", function () {\r",
+									"    pm.expect(responseBody.quantidade).to.be.not.null\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios?_id={{idUsuario}}&nome={{nome}}&email={{email}}&password={{password}}&administrador=false",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "{{idUsuario}}"
+								},
+								{
+									"key": "nome",
+									"value": "{{nome}}"
+								},
+								{
+									"key": "email",
+									"value": "{{email}}"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}"
+								},
+								{
+									"key": "administrador",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "CT007 - Realizar Login - Perfil básico",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('token', responseBody.authorization)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o login realizado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Login realizado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/login",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT008 - Realizar Login - Perfil ADM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('tokenadm', responseBody.authorization)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o login realizado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Login realizado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{email_ADM}}\",\r\n  \"password\": \"{{passwordADM}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/login",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Produto",
+			"item": [
+				{
+					"name": "CT009 - Cadastrar Produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('idProduto', responseBody._id)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o produto foi cadastrado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Cadastro realizado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{tokenadm}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{$randomProduct}}\",\r\n  \"preco\": 470,\r\n  \"descricao\": \"Mouse\",\r\n  \"quantidade\": 381\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/produtos",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT010 - Alterar Produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o produto foi alterado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Registro alterado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{tokenadm}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{$randomProduct}}\",\r\n  \"preco\": 470,\r\n  \"descricao\": \"Mouse\",\r\n  \"quantidade\": 381\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/produtos/{{idProduto}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"produtos",
+								"{{idProduto}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT011 - Consultar Produtos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"var items = pm.response.json()\r",
+									"\r",
+									"\r",
+									"\r",
+									"//console.log(itens)\r",
+									"\r",
+									"//const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here\r",
+									"//const header = Object.keys(items[0])\r",
+									"//const csv = [\r",
+									"//  header.join(','), // header row first\r",
+									"//  ...items.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))\r",
+									"//].join('\\r\\n')\r",
+									"//\r",
+									"//console.log(csv)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar a quantidade de produto cadastrado\", function () {\r",
+									"    pm.expect(responseBody.quantidade).to.be.not.null\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar o id do produto\", function () {\r",
+									"    pm.expect(responseBody._id).to.be.not.null\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_api_serverest}}/produtos",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"produtos"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "{{idProduto}}",
+									"disabled": true
+								},
+								{
+									"key": "nome",
+									"value": "Bike",
+									"disabled": true
+								},
+								{
+									"key": "preco",
+									"value": "470",
+									"disabled": true
+								},
+								{
+									"key": "descricao",
+									"value": "Mouse",
+									"disabled": true
+								},
+								{
+									"key": "quantidade",
+									"value": "381",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT012 - Consultar Produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar a quantidade de produto cadastrado\", function () {\r",
+									"    pm.expect(responseBody.quantidade).to.be.not.null\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar o id do produto\", function () {\r",
+									"    pm.expect(responseBody._id).to.be.not.null\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_api_serverest}}/produtos/{{idProduto}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"produtos",
+								"{{idProduto}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT013 - Excluir Produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve a mensagem que o registro foi excluido com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Registro excluído com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{tokenadm}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_api_serverest}}/produtos/{{idProduto}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"produtos",
+								"{{idProduto}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Carrinho",
+			"item": [
+				{
+					"name": "CT014 - Cadastrar Carrinho",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('idCarrinho', responseBody._id)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o carrinho foi cadastrado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Cadastro realizado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{idProduto}}\",\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT015 - Consultar Carrinhos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos?_id={{idCarrinho}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "{{idCarrinho}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT016 - Consultar Carrinho",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos/{{idCarrinho}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos",
+								"{{idCarrinho}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT017 - Efetivar Compra",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve a mensagem que o registro foi excluido com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Registro excluído com sucesso\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos/concluir-compra",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos",
+								"concluir-compra"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT018 - Cancelar compra",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve a mensagem que o registro foi excluido com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Registro excluído com sucesso\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos/cancelar-compra",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos",
+								"cancelar-compra"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Exclusão",
+			"item": [
+				{
+					"name": "CT019 - Excluir usuário",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve a mensagem que oregistro foi excluido com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eql(\"Registro excluído com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios/{{idUsuario}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios",
+								"{{idUsuario}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT020 - Excluir usuário ADM",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve a mensagem que oregistro foi excluido com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eql(\"Registro excluído com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios/{{idUsuarioADM}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios",
+								"{{idUsuarioADM}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Fluxo completo",
+			"item": [
+				{
+					"name": "CT001 - Criar Usuario ADM",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const obterCPF = {\r",
+									"  url: 'https://www.4devs.com.br/ferramentas_online.php',\r",
+									"  method: 'POST',\r",
+									"  header: 'Content-Type:application/x-www-form-urlencoded; charset=UTF-8',\r",
+									"  body: {\r",
+									"            mode: 'urlencoded',\r",
+									"            urlencoded: [\r",
+									"                    { key: 'acao', value: 'gerar_pessoa' },\r",
+									"                    { key: 'sexo', value: 'I' },\r",
+									"                    { key: 'txt_qtde', value: '1' },\r",
+									"            ]\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.sendRequest(obterCPF, function (err, res) {\r",
+									"    console.log(err ? err : res.json());\r",
+									"    if (err === null) {\r",
+									"        console.log('Saving the responseBody');\r",
+									"        //var responseJson = JSON.stringify( res.json()[0].nome)\r",
+									"        pm.environment.set('nome_ADM', res.json()[0].nome);\r",
+									"        pm.environment.set('email_ADM', res.json()[0].email);\r",
+									"\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('idUsuarioADM', responseBody._id)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{nome_ADM}}\",\r\n  \"email\": \"{{email_ADM}}\",\r\n  \"password\": \"{{passwordADM}}\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT002 - Consultar usuário",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar a quantidade de usuário cadastrado\", function () {\r",
+									"    pm.expect(responseBody.quantidade).to.not.null\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_api_serverest}}/usuarios?_id={{idUsuario}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "_id",
+									"value": "{{idUsuario}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT003 - Login ADM",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('token', responseBody.authorization)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o login realizado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Login realizado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"{{email_ADM}}\",\r\n  \"password\": \"{{passwordADM}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/login",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT004 - Cadastrar Produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('idProduto', responseBody._id)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o produto foi cadastrado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Cadastro realizado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{$randomProduct}}\",\r\n  \"preco\": 470,\r\n  \"descricao\": \"Mouse\",\r\n  \"quantidade\": 381\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/produtos",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT005 - Consultar Produto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar a quantidade de produto cadastrado\", function () {\r",
+									"    pm.expect(responseBody.quantidade).to.be.not.null\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar o id do produto\", function () {\r",
+									"    pm.expect(responseBody._id).to.be.not.null\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_api_serverest}}/produtos/{{idProduto}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"produtos",
+								"{{idProduto}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT006 - Cadastrar Carrinho",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"pm.environment.set('idCarrinho', responseBody._id)\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve retornar que o carrinho foi cadastrado com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Cadastro realizado com sucesso\")\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"produtos\": [\r\n    {\r\n      \"idProduto\": \"{{idProduto}}\",\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT007 - Consultar Carrinho",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos/{{idCarrinho}}",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos",
+								"{{idCarrinho}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT008 - Concluir Compra",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = JSON.parse(responseBody)\r",
+									"\r",
+									"\r",
+									"pm.test(\"Deve retornar o status cod 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.eql(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Deve a mensagem que o registro foi excluido com sucesso\", function () {\r",
+									"    pm.expect(responseBody.message).to.be.eq(\"Registro excluído com sucesso\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_api_serverest}}/carrinhos/concluir-compra",
+							"host": [
+								"{{base_api_serverest}}"
+							],
+							"path": [
+								"carrinhos",
+								"concluir-compra"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

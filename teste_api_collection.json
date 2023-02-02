@@ -96,7 +96,7 @@
 					"response": []
 				},
 				{
-					"name": "CT002 - Cadastrar Usuário perfil ADM",
+					"name": "CT002 - Cadastrar Usuário - ADM",
 					"event": [
 						{
 							"listen": "prerequest",

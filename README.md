@@ -1,5 +1,5 @@
 # api_serverest
-# Título do projeto - https://example.gitlab.com/%{project_path}/badges/%{default_branch}/pipeline.svg
+# Título do projeto
 
 Um parágrafo da descrição do projeto vai aqui
 
